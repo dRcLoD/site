@@ -19,6 +19,9 @@
         <a href="about.html" class="nav-btn">关于</a>
         <a href="https://space.bilibili.com/293534745" class="nav-btn">B站首页</a>
       </nav>
+      <div class="visitor-counter">
+        <span>👁 访客数: </span><span id="visitor-count">--</span>
+      </div>
     </div>
   </aside>
 
@@ -121,6 +124,13 @@ fetch('https://t.alcy.cc/json?pc=1')
     }
   })
   .catch(err => console.log('背景加载失败:', err));
+
+fetch('https://api.counterapi.dev/v1/dRcLoD/site/count')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('visitor-count').textContent = data.count;
+  })
+  .catch(err => console.log('访客数加载失败:', err));
 </script>
 </body>
 </html>
