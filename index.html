@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dRcLoD的博客</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="user-card">
+      <img class="avatar" src="image/touxiang.jpg" alt="头像">
+      <h1 class="username">dRcLoD</h1>
+      <p class="signature">是否需要写下什么证明这里存在过什么</p>
+      <nav class="nav-buttons">
+        <a href=".\index.html" class="nav-btn">首页</a>
+        <a href=".\text\about.html" class="nav-btn">关于</a>
+        <a href="https://space.bilibili.com/293534745" class="nav-btn">B站首页</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-title">
+      <h1>dRcLoD的博客</h1>
+      <div class="page-title-bottom">
+        <p>发布一些东西的小站</p>
+        <a href="https://github.com/dRcLoD/site" class="nav-btn">本站github仓库</a>
+      </div>
+    </div>
+
+    <div class="content-cards">
+      <a href=".\text\about.html" class="card featured-card">
+        <h3>置顶推荐</h3>
+        <p>dRcLoD的博客开站公告</p>
+        <div class="card-meta">
+          <span class="card-tag">置顶</span>
+          <span>2024-03-15</span>
+        </div>
+      </a>
+
+      <a href=".\text\1.html" class="card">
+        <h3>从0.5开始的废品小学习——从纯轴到耀圣</h3>
+        <p>分享我从LOCH之后到4月表前对废品进行迭代的心路历程</p>
+        <div class="card-meta">
+          <span class="card-tag">游戏王</span>
+          <span>2026-03-30</span>
+        </div>
+      </a>
+
+    <div class="footer">
+      <p>© 2026 dRcLoD | 用文字记录生活</p>
+    </div>
+  </main>
+</div>
+
+<script>
+fetch('https://t.alcy.cc/json?pc=1')
+  .then(res => res.json())
+  .then(data => {
+    if (data.code === 200 && data.data.link) {
+      document.body.style.backgroundImage = `url(${data.data.link})`;
+    }
+  })
+  .catch(err => console.log('背景加载失败:', err));
+</script>
+</body>
+</html>

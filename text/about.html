@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dRcLoD的博客开站公告 - dRcLoD的博客</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="user-card">
+      <img class="avatar" src="../image/touxiang.jpg" alt="头像">
+      <h1 class="username">dRcLoD</h1>
+      <p class="signature">是否需要写下什么证明这里存在过什么</p>
+      <nav class="nav-buttons">
+        <a href="../index.html" class="nav-btn">首页</a>
+        <a href="about.html" class="nav-btn">关于</a>
+        <a href="https://space.bilibili.com/293534745" class="nav-btn">B站首页</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="article-header">
+      <a href="../index.html" class="back-btn">← 返回首页</a>
+      <span class="article-tag" id="article-tag">公告</span>
+      <h1 class="article-title" id="article-title">dRcLoD的博客开站公告</h1>
+      <div class="article-meta">
+        <span class="article-date" id="article-date">2026-08-05</span>
+        <span class="article-author">dRcLoD</span>
+      </div>
+    </div>
+
+    <article class="article-content" id="article-content">
+      <p>本站算是正式开站了</p>
+    </article>
+
+    <div class="footer">
+      <p>© 2026 dRcLoD | 用文字记录生活</p>
+    </div>
+  </main>
+</div>
+
+<script>
+fetch('https://t.alcy.cc/json?pc=1')
+  .then(res => res.json())
+  .then(data => {
+    if (data.code === 200 && data.data.link) {
+      document.body.style.backgroundImage = `url(${data.data.link})`;
+    }
+  })
+  .catch(err => console.log('背景加载失败:', err));
+</script>
+</body>
+</html>
