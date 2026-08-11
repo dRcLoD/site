@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档 - dRcLoD的博客</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/file-manager.css">
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="user-card">
+      <img class="avatar" src="../image/touxiang.jpg" alt="头像">
+      <h1 class="username">dRcLoD</h1>
+      <p class="signature">是否需要写下什么证明这里存在过什么</p>
+      <nav class="nav-buttons">
+        <a href="../index.html" class="nav-btn">首页</a>
+        <a href="../text/about.html" class="nav-btn">关于</a>
+        <a href="https://space.bilibili.com/293534745" class="nav-btn">B站首页</a>
+      </nav>
+      <div class="visitor-counter">
+        <span>👁 访客数: </span><span id="visitor-count">--</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="file-explorer" id="file-explorer">
+      <div class="explorer-toolbar">
+        <button class="tool-btn" onclick="location.href='../index.html'" title="返回首页">🏠</button>
+        <button class="tool-btn" onclick="refreshList()" title="刷新">🔄</button>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="搜索文档..." oninput="onSearch()">
+        </div>
+        <div class="view-toggle">
+          <button class="tool-btn active" id="view-list" onclick="setView('list')" title="列表视图">☰</button>
+          <button class="tool-btn" id="view-grid" onclick="setView('grid')" title="网格视图">▦</button>
+        </div>
+      </div>
+
+      <div class="breadcrumb-bar">
+        <span class="crumb" onclick="location.href='../index.html'">📁 我的网盘</span>
+        <span class="crumb-sep">›</span>
+        <span class="crumb current">📄 文档</span>
+      </div>
+
+      <div class="file-table-wrap">
+        <table class="file-table">
+          <thead>
+            <tr>
+              <th data-sort="name" onclick="sortBy('name')">名称 <span class="sort-arrow" id="arrow-name"></span></th>
+              <th data-sort="date" onclick="sortBy('date')">修改日期 <span class="sort-arrow" id="arrow-date"></span></th>
+              <th data-sort="type" onclick="sortBy('type')">类型 <span class="sort-arrow" id="arrow-type"></span></th>
+              <th data-sort="size" onclick="sortBy('size')">大小 <span class="sort-arrow" id="arrow-size"></span></th>
+            </tr>
+          </thead>
+          <tbody id="file-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="grid-view" id="grid-view"></div>
+
+      <div class="explorer-status">
+        <span><span class="status-count" id="status-count">0</span> 个项目</span>
+        <span id="status-total"></span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>© 2026 dRcLoD | 用文字记录生活</p>
+    </div>
+  </main>
+</div>
+
+<div class="music-player">
+  <div class="music-toggle" onclick="toggleMusic()">🎵</div>
+  <div class="music-panel" id="music-panel">
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=450 src="https://music.163.com/outchain/player?type=0&id=4970305981&auto=0&height=430"></iframe>
+  </div>
+</div>
+
+<script>
+var FILES = [
+  {
+    name: 'An.introduction.to.CV.and.RoboMaster.Perception.pdf',
+    size: 79148621,
+    date: '2026/6/2 20:59',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: 'An.introduction.to.CV.and.RoboMaster.Perception.pdf'
+  },
+  {
+    name: '前端/CSS3.pdf',
+    size: 9265629,
+    date: '2026/8/11 15:05',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: '前端/CSS3.pdf'
+  },
+  {
+    name: '前端/ES6.pdf',
+    size: 15634314,
+    date: '2026/8/11 15:05',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: '前端/ES6.pdf'
+  },
+  {
+    name: '前端/HTML5.pdf',
+    size: 11042710,
+    date: '2026/8/11 15:05',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: '前端/HTML5.pdf'
+  },
+  {
+    name: '前端/JavaScript.pdf',
+    size: 18369711,
+    date: '2026/8/11 14:53',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: '前端/JavaScript.pdf'
+  },
+  {
+    name: '前端/Vue3.pdf',
+    size: 10410310,
+    date: '2026/8/11 15:05',
+    type: 'PDF 文档',
+    icon: '📄',
+    url: '前端/Vue3.pdf'
+  }
+];
+
+var currentSort = { key: 'name', dir: 'asc' };
+var currentView = 'list';
+var keyword = '';
+
+function formatSize(bytes) {
+  if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(2) + ' GB';
+  if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+  if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return bytes + ' B';
+}
+
+function getFilteredFiles() {
+  var kw = keyword.toLowerCase();
+  var list = FILES.filter(function(f) {
+    return !kw || f.name.toLowerCase().indexOf(kw) !== -1;
+  });
+  list.sort(function(a, b) {
+    var av, bv;
+    if (currentSort.key === 'size') {
+      av = a.size;
+      bv = b.size;
+    } else {
+      av = String(a[currentSort.key]).toLowerCase();
+      bv = String(b[currentSort.key]).toLowerCase();
+    }
+    var r = av < bv ? -1 : av > bv ? 1 : 0;
+    return currentSort.dir === 'asc' ? r : -r;
+  });
+  return list;
+}
+
+function renderList() {
+  var tbody = document.getElementById('file-tbody');
+  var list = getFilteredFiles();
+  tbody.innerHTML = '';
+  document.getElementById('status-count').textContent = list.length;
+  document.getElementById('status-total').textContent = '共 ' + FILES.length + ' 个文件 · 总大小 ' + formatSize(FILES.reduce(function(s, f) { return s + f.size; }, 0));
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-tip"><span class="empty-icon">📭</span>没有找到相关文档</div></td></tr>';
+    return;
+  }
+
+  list.forEach(function(f) {
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><span class="name-cell"><span class="file-icon">' + f.icon + '</span>' + f.name + '</span></td>' +
+      '<td class="date-cell">' + f.date + '</td>' +
+      '<td class="type-cell">' + f.type + '</td>' +
+      '<td class="size-cell">' + formatSize(f.size) + '</td>';
+    tr.addEventListener('click', function() { window.open(f.url, '_blank'); });
+    tbody.appendChild(tr);
+  });
+}
+
+function renderGrid() {
+  var grid = document.getElementById('grid-view');
+  var list = getFilteredFiles();
+  grid.innerHTML = '';
+  document.getElementById('status-count').textContent = list.length;
+
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="empty-tip"><span class="empty-icon">📭</span>没有找到相关文档</div>';
+    return;
+  }
+
+  list.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'grid-item';
+    div.innerHTML =
+      '<span class="grid-icon">' + f.icon + '</span>' +
+      '<div class="grid-name">' + f.name + '</div>' +
+      '<div class="grid-size">' + formatSize(f.size) + '</div>';
+    div.addEventListener('click', function() { window.open(f.url, '_blank'); });
+    grid.appendChild(div);
+  });
+}
+
+function render() {
+  renderList();
+  renderGrid();
+}
+
+function sortBy(key) {
+  if (currentSort.key === key) {
+    currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    currentSort.key = key;
+    currentSort.dir = 'asc';
+  }
+  ['name', 'date', 'type', 'size'].forEach(function(k) {
+    document.getElementById('arrow-' + k).textContent = (k === key) ? (currentSort.dir === 'asc' ? '▲' : '▼') : '';
+  });
+  render();
+}
+
+function onSearch() {
+  keyword = document.getElementById('search-input').value.trim();
+  render();
+}
+
+function setView(view) {
+  currentView = view;
+  var explorer = document.getElementById('file-explorer');
+  explorer.classList.toggle('grid-mode', view === 'grid');
+  document.getElementById('view-list').classList.toggle('active', view === 'list');
+  document.getElementById('view-grid').classList.toggle('active', view === 'grid');
+}
+
+function refreshList() {
+  keyword = '';
+  document.getElementById('search-input').value = '';
+  render();
+}
+
+function toggleMusic() {
+  document.getElementById('music-panel').classList.toggle('active');
+}
+
+fetch('https://t.alcy.cc/json?pc=1')
+  .then(res => res.json())
+  .then(data => {
+    if (data.code === 200 && data.data.link) {
+      document.body.style.backgroundImage = `url(${data.data.link})`;
+    }
+  })
+  .catch(err => console.log('背景加载失败:', err));
+
+fetch('https://api.counterapi.dev/v1/dRcLoD/site/count')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('visitor-count').textContent = data.count;
+  })
+  .catch(err => console.log('访客数加载失败:', err));
+
+sortBy('name');
+setView('list');
+render();
+</script>
+</body>
+</html>
