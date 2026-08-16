@@ -115,9 +115,9 @@ export const articles = [
 
 ### 资料下载页说明
 
-- 文件列表通过 **GitHub API** 动态获取仓库 `main` 分支下 `public/document/` 中的文件，因此**新增/删除文件后直接 `push` 即可自动生效**，无需额外生成列表。
+- 文件列表由 `scripts/generate-files.mjs` 在构建时扫描 `public/document/` **自动生成**为 `public/files.json`（名称、大小、修改日期、类型），前端直接读取本地文件，**不依赖任何外部 API**，没有限流问题。
+- 新增/删除文件后直接 `git push` 即可：CI 会自动重新生成文件列表并部署，无需手动维护。
 - 注意 GitHub 单个文件上限为 100MB。
-- 由于 GitHub API 不提供文件的修改时间，文件列表中不显示"修改日期"，改为显示"类型"。
 
 ## 常用脚本
 

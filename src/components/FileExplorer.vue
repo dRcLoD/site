@@ -37,10 +37,11 @@
           </thead>
           <tbody>
             <tr v-if="filtered.length === 0">
-              <td colspan="3"><div class="empty-tip"><span class="empty-icon">📭</span>没有找到相关文档</div></td>
+              <td colspan="4"><div class="empty-tip"><span class="empty-icon">📭</span>没有找到相关文档</div></td>
             </tr>
             <tr v-for="f in filtered" :key="f.path" @click="openFile(f)">
               <td><span class="name-cell"><span class="file-icon">{{ f.icon }}</span>{{ f.name }}</span></td>
+              <td class="date-cell">{{ f.date }}</td>
               <td class="type-cell">{{ f.type }}</td>
               <td class="size-cell">{{ formatSize(f.size) }}</td>
             </tr>
@@ -75,6 +76,7 @@ const { files, loading, error, load } = useDocumentList()
 
 const columns = [
   { key: 'name', label: '名称' },
+  { key: 'date', label: '修改日期' },
   { key: 'type', label: '类型' },
   { key: 'size', label: '大小' },
 ]
