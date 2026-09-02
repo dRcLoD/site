@@ -17,6 +17,8 @@
       <p>本站增加了文件下载功能</p>
       <h1 class="article-title">2026.08.16功能更新</h1>
       <p>使用蓝色大鲸鱼的力量把这个网站用vue重写了一遍</p>
+      <h1 class="article-title">2026.09.02功能更新</h1>
+      <p>增加小世界计算器</p>
     </article>
   </div>
 </template>
