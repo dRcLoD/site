@@ -17,13 +17,12 @@ import Sidebar from './components/Sidebar.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 
 onMounted(() => {
-  fetch('https://t.alcy.cc/json?pc=1')
-    .then(res => res.json())
-    .then(data => {
-      if (data.code === 200 && data.data.link) {
-        document.body.style.backgroundImage = `url(${data.data.link})`
-      }
-    })
-    .catch(err => console.log('背景加载失败:', err))
+  // /json 接口无 CORS 头，fetch 会被浏览器拦截；直接加载图片端点绕过 CORS
+  const img = new Image()
+  img.onload = () => {
+    document.body.style.backgroundImage = `url(${img.currentSrc})`
+  }
+  img.onerror = () => console.log('背景加载失败:', img.src)
+  img.src = 'https://t.alcy.cc/moe'
 })
 </script>
