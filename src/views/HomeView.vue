@@ -18,6 +18,20 @@
         </div>
       </a>
 
+      <a
+        href="https://drclod.github.io/robomaster_vision_site_of_qcu/"
+        class="card"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3>青岛城市学院青橙战队算法组知识库</h3>
+        <p>青橙战队算法组的学习资料、任务安排与赛季记录</p>
+        <div class="card-meta">
+          <span class="card-tag">算法组</span>
+          <span>2026-09-23</span>
+        </div>
+      </a>
+
       <router-link v-for="a in articles" :key="a.id" :to="'/article/' + a.id" class="card">
         <h3>{{ a.title }}</h3>
         <p>{{ a.summary }}</p>
